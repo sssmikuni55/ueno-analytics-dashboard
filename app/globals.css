@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+}
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --primary: #6366f1;
+  --accent: #f472b6;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #020617;
+    --foreground: #f8fafc;
+    --primary: #818cf8;
+    --glass-bg: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253,16%,15%,0.1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,0.1) 0, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.ichika-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #f472b6 100%);
+}
+
+.ichika-avatar {
+  background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* スクロールバー全体のスタイル (Webkit系ブラウザ用) */
+::-webkit-scrollbar {
+  width: 20px;
+  height: 20px;
+}
+
+/* トラック（背景） */
+::-webkit-scrollbar-track {
+  background: #020617;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* サム（つまみ） */
+::-webkit-scrollbar-thumb {
+  background: #f0b400;
+  border: 4px solid #020617; /* つまみを少し細く見せつつ、クリック判定を確保 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffcf40;
+}
