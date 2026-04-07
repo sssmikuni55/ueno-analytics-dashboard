@@ -279,19 +279,12 @@ export default function Dashboard() {
       return acc;
     }, {});
 
-    let runningSessions = 0;
-    let runningPV = 0;
-    let runningGoals = 0;
-
     return Object.entries(dailyMap).sort().map(([dateKey, values]: any) => {
-      runningSessions += values.sessions;
-      runningPV += values.pageviews;
-      runningGoals += values.goals;
       return {
         date: dateKey.includes('-') ? dateKey.split('-').slice(1).join('/') : dateKey,
-        sessions: runningSessions,
-        pageviews: runningPV,
-        goals: runningGoals
+        sessions: values.sessions,
+        pageviews: values.pageviews,
+        goals: values.goals
       };
     });
   }, [filteredData]);
@@ -382,7 +375,7 @@ export default function Dashboard() {
             <div className="glass-card p-10 h-[580px] shadow-2xl border-white/10 relative overflow-hidden flex flex-col">
               <div className="absolute top-0 left-0 w-full h-1 ichika-gradient opacity-40"></div>
               <div className="flex justify-between items-center mb-10">
-                <h3 className="font-black text-2xl text-[#1e293b] flex items-center gap-3"><TrendingUp size={28} className="text-primary" /> 成長の軌跡 (累計アクセス)</h3>
+                <h3 className="font-black text-2xl text-[#1e293b] flex items-center gap-3"><TrendingUp size={28} className="text-primary" /> 日別アクセス推移</h3>
               </div>
               <div className="flex-1 min-h-0">
                 <ResponsiveContainer width="100%" height="100%">
@@ -391,9 +384,9 @@ export default function Dashboard() {
                     <XAxis dataKey="date" stroke="#1e293b" fontSize={14} fontWeight="black" dy={10} />
                     <YAxis stroke="#1e293b" fontSize={14} fontWeight="black" />
                     <RechartsTooltip content={<CustomTooltip />} />
-                    <Area type="monotone" dataKey="pageviews" fill="#6366f1" fillOpacity={0.2} stroke="#6366f1" strokeWidth={3} name="累計閲覧数" />
-                    <Area type="monotone" dataKey="sessions" fill="#818cf8" fillOpacity={0.1} stroke="#818cf8" strokeWidth={2} name="累計訪問数" />
-                    <Bar dataKey="goals" fill="#f472b6" radius={[4, 4, 0, 0]} barSize={25} name="累計相談数" />
+                    <Area type="monotone" dataKey="pageviews" fill="#6366f1" fillOpacity={0.2} stroke="#6366f1" strokeWidth={3} name="閲覧数 (PV)" />
+                    <Area type="monotone" dataKey="sessions" fill="#818cf8" fillOpacity={0.1} stroke="#818cf8" strokeWidth={2} name="訪問数 (セッション)" />
+                    <Bar dataKey="goals" fill="#f472b6" radius={[4, 4, 0, 0]} barSize={25} name="相談・反応" />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
