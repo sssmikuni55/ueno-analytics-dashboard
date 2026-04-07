@@ -577,7 +577,7 @@ function PresetButton({ label, onClick }: any) {
 
 function MetricCard({ title, value, unit, description, icon, color }: any) {
   return (
-    <div className="glass-card p-10 border-white/20 relative overflow-hidden group shadow-xl">
+    <div className="glass-card p-10 border-white/20 relative group shadow-xl">
       <div className="flex justify-between items-start mb-8">
         <div className="p-4 bg-white/10 rounded-2xl border border-white/20 shadow-inner">{icon}</div>
         <div className="relative group/tip"><Info className="w-6 h-6 text-slate-400 cursor-help" /><div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-5 w-64 p-6 bg-slate-900/95 text-white text-sm rounded-2xl opacity-0 group-hover/tip:opacity-100 transition-opacity z-50 font-medium shadow-2xl backdrop-blur-md">{description}</div></div>
