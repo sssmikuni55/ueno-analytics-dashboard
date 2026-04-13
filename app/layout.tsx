@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`${inter.variable} antialiased`}>
       <body className="min-h-screen">
-        <header className="fixed top-0 left-0 right-0 z-50 h-16 border-b border-white/10 backdrop-blur-md bg-white/5 flex items-center px-8 justify-between">
+        <header className="h-16 border-b border-white/10 backdrop-blur-md bg-white/5 flex items-center px-8 justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-white p-1 border border-white/20 overflow-hidden shadow-sm flex items-center justify-center">
               <img src="/ueno-logo.png" alt="こども園うえの" className="w-full h-full object-contain" />
@@ -31,7 +31,7 @@ export default function RootLayout({
             今日もサイトの様子を一緒に見ていきましょう
           </div>
         </header>
-        <main className="pt-24 pb-12 px-4 sm:px-8 max-w-7xl mx-auto">
+        <main className="pt-8 pb-12 px-4 sm:px-8 max-w-7xl mx-auto">
           {children}
         </main>
       </body>

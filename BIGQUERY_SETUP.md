@@ -83,3 +83,30 @@ ORDER BY
     - 推奨: `reporting_summary` という名前の新規テーブルに出力するように設定します。
 
 これで、ダッシュボードのソースとなる「わかりやすいデータ」が毎日自動で準備されます。
+
+## 3. Google Search Console との連携 (検索キーワードの表示)
+
+Google検索からの流入キーワードや表示順位をダッシュボードに表示するための設定です。
+
+### 3-1. Search Console でのエクスポート設定
+
+1. [Google Search Console](https://search.google.com/search-console) にログインします。
+2. 左メニューの **[設定]** > **[一括データ エクスポート]** を選択します。
+3. 以下の情報を入力して「続行」をクリックします。
+   - **Cloud プロジェクト ID**: `ueno-466523`
+   - **データセット名**: `searchconsole`
+   - **データセットの場所**: **「大阪 (asia-northeast2)」** を選択
+     - ※既存のデータセットがある場合、同じ場所を選択しないとエラーになることがあります。
+
+### 3-2. Google Cloud 側の権限設定
+
+Search Console が BigQuery にデータを書き込めるように、以下の権限を付与します。
+
+1. [Google Cloud Console (IAM)](https://console.cloud.google.com/iam-admin/iam) にアクセスします。
+2. **[アクセス権を付与]** をクリックし、以下のアドレスを追加します。
+   - **新しいプリンシパル**: `search-console-data-export@system.gserviceaccount.com`
+   - **割り当てるロール**: `BigQuery 管理者`（または「BigQuery 編集者」と「BigQuery ジョブユーザー」双方）
+
+### ⚠️ 注意事項
+- 設定完了後、最初のデータが BigQuery に表示されるまで **24〜48時間** かかります。
+- **過去のデータは遡ってインポートされません。** 設定した日以降のデータのみが蓄積されます。

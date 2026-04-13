@@ -13,8 +13,15 @@ export async function GET(request: NextRequest) {
   try {
     const data = await getGscAnalytics(startDate, endDate);
     return NextResponse.json(data);
-  } catch (error) {
-    console.error('API GSC data error:', error);
-    return NextResponse.json({ error: 'GSCデータの取得に失敗しました' }, { status: 500 });
+  } catch (error: any) {
+    console.error('API GSC data error:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    return NextResponse.json({ 
+      error: 'GSCデータの取得に失敗しました',
+      details: error.message 
+    }, { status: 500 });
   }
 }

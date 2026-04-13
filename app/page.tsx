@@ -35,6 +35,13 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
+interface PageStats {
+  page_location: string;
+  page_title: string;
+  views: number;
+  users: number;
+}
+
 /**
  * カスタム・カレンダーコンポーネント (保育園/プレミアム・デザイン)
  */
@@ -150,10 +157,59 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+/**
+ * ページ別のアクセス状況を表示するテーブル
+ */
+const PagePerformanceTable = ({ pages }: { pages: PageStats[] }) => {
+  return (
+    <div className="glass-card p-10 shadow-lg border-white/10 overflow-hidden">
+      <h3 className="font-black text-2xl mb-8 text-[#1e293b] flex items-center gap-3">
+        <LayoutGrid size={28} className="text-primary" /> ページ別のアクセス状況
+      </h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b-2 border-slate-100 text-[#1e293b]/60 text-sm font-black uppercase tracking-widest">
+              <th className="pb-4 pr-4">ページタイトル / URL</th>
+              <th className="pb-4 px-4 text-right">表示回数 (PV)</th>
+              <th className="pb-4 pl-4 text-right">訪問者数</th>
+            </tr>
+          </thead>
+          <tbody className="font-bold text-[#1e293b]">
+            {pages.length > 0 ? pages.map((page, i) => {
+              return (
+                <tr key={i} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                  <td className="py-4 pr-4">
+                    <div className="font-black text-[#1e293b] leading-tight mb-1">{page.page_title || '無題のページ'}</div>
+                    <div className="text-xs text-slate-400 font-medium break-all">{page.page_location}</div>
+                  </td>
+                  <td className="py-4 px-4 text-right tabular-nums font-black text-primary">
+                    {page.views.toLocaleString()}
+                  </td>
+                  <td className="py-4 pl-4 text-right tabular-nums">
+                    {page.users.toLocaleString()}
+                  </td>
+                </tr>
+              );
+            }) : (
+              <tr>
+                <td colSpan={3} className="py-20 text-center text-slate-400 font-black">
+                  期間内の詳細データがありません
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 const formatDateToYYYYMMDD = (date: Date) => date.toISOString().split('T')[0].replace(/-/g, '');
 
 export default function Dashboard() {
-  const [data, setData] = useState<any[]>([]);
+  const [siteData, setSiteData] = useState<any[]>([]);
+  const [pageData, setPageData] = useState<PageStats[]>([]);
   const [loading, setLoading] = useState(true);
   
   const today = new Date();
@@ -186,9 +242,12 @@ export default function Dashboard() {
         const res = await fetch(`/api/data?startDate=${startDate}&endDate=${endDate}`);
         const result = await res.json();
         if (result.error) throw new Error(result.error);
-        setData(result);
+        
+        setSiteData(result.siteStats || []);
+        setPageData(result.pageStats || []);
       } catch (err) {
         console.error(err);
+        // フォールバック用のデモデータ（サイト全体のトレンドのみ）
         const demo = [];
         let cur = new Date(startDate.slice(0,4) + '-' + startDate.slice(4,6) + '-' + startDate.slice(6,8));
         const end = new Date(endDate.slice(0,4) + '-' + endDate.slice(4,6) + '-' + endDate.slice(6,8));
@@ -197,7 +256,8 @@ export default function Dashboard() {
           demo.push({ event_date: { value: dStr }, device_category: 'mobile', source: 'google', medium: 'organic', sessions: Math.random() > 0.8 ? 1 : 0, pageviews: Math.random() > 0.6 ? 2 : 0, goal_clicks: Math.random() > 0.95 ? 1 : 0, engagement_rate: 0.65 });
           cur.setDate(cur.getDate() + 1);
         }
-        setData(demo);
+        setSiteData(demo);
+        setPageData([]);
       } finally {
         setLoading(false);
       }
@@ -223,9 +283,9 @@ export default function Dashboard() {
   }, [startDate, endDate]);
 
   const filteredData = useMemo(() => {
-    if (deviceFilter === 'all') return data;
-    return data.filter(row => row.device_category === deviceFilter);
-  }, [data, deviceFilter]);
+    if (deviceFilter === 'all') return siteData;
+    return siteData.filter(row => row.device_category === deviceFilter);
+  }, [siteData, deviceFilter]);
 
   const totals = useMemo(() => {
     return filteredData.reduce((acc, row) => ({
@@ -405,6 +465,9 @@ export default function Dashboard() {
                 ))}
               </div>
             </div>
+
+            {/* ページ別アクセスランキング */}
+            <PagePerformanceTable pages={pageData} />
 
             {/* Google Search Console - 検索パフォーマンス */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
