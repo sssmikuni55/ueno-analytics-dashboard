@@ -7,7 +7,11 @@ const bigquery = new BigQuery({
   projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
   credentials: {
     client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY
+      ?.replace(/\\n/g, '\n')     // エスケープされた改行を戻す
+      .replace(/^"|"$/g, '')      // 前後のダブルクォーテーションを削除
+      .replace(/^'|'$/g, '')      // 前後のシングルクォーテーションを削除
+      .trim(),                    // 余計な空白を削除
   },
 });
 
