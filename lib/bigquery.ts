@@ -20,7 +20,11 @@ const bigquery = new BigQuery({
  * 指定した期間のサイト状況データを取得します。
  */
 export async function getSiteAnalytics(startDate: string, endDate: string) {
-  const datasetId = process.env.BIGQUERY_REPORTING_TABLE.split('.').slice(0, 2).join('.');
+  const reportingTable = process.env.BIGQUERY_REPORTING_TABLE;
+  if (!reportingTable) {
+    throw new Error('BIGQUERY_REPORTING_TABLE environment variable is not set');
+  }
+  const datasetId = reportingTable.split('.').slice(0, 2).join('.');
   const query = `
     WITH base_events AS (
       SELECT
@@ -132,7 +136,11 @@ export async function getGscAnalytics(startDate: string, endDate: string) {
  * ページ別のアクセス統計を取得します
  */
 export async function getPageAnalytics(startDate: string, endDate: string) {
-  const datasetId = process.env.BIGQUERY_REPORTING_TABLE.split('.').slice(0, 2).join('.');
+  const reportingTable = process.env.BIGQUERY_REPORTING_TABLE;
+  if (!reportingTable) {
+    throw new Error('BIGQUERY_REPORTING_TABLE environment variable is not set');
+  }
+  const datasetId = reportingTable.split('.').slice(0, 2).join('.');
   const query = `
     WITH base_events AS (
       SELECT
