@@ -88,7 +88,7 @@ export async function getGscAnalytics(startDate: string, endDate: string) {
         CAST(data_date AS STRING) as date,
         SUM(impressions) as impressions,
         SUM(clicks) as clicks,
-        SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) as avg_position
+        SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1 as avg_position
       FROM
         \`${projectId}.searchconsole.searchdata_site_impression\`
       WHERE
@@ -106,7 +106,7 @@ export async function getGscAnalytics(startDate: string, endDate: string) {
         SUM(impressions) as impressions,
         SUM(clicks) as clicks,
         SAFE_DIVIDE(SUM(clicks), SUM(impressions)) as ctr,
-        SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) as avg_position
+        SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1 as avg_position
       FROM
         \`${projectId}.searchconsole.searchdata_site_impression\`
       WHERE
